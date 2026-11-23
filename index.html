@@ -1,31 +1,38 @@
-<!DOCTYPE html>
-<html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RenovAI — Scanare & deviz</title>
+<!doctype html>
+<html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RenovAI – Materiale și deviz</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f2f5f8;color:#18212b;font:16px Arial,sans-serif}main{max-width:900px;margin:auto;padding:16px}header{background:#152944;color:white;border-radius:16px;padding:20px}h1{margin:0 0 8px}section{background:white;padding:16px;margin:14px 0;border-radius:14px;box-shadow:0 2px 10px #0001}h2{margin-top:0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}label{display:block;font-size:14px;margin-bottom:4px}input,select,button{width:100%;padding:12px;border:1px solid #bcc5ce;border-radius:9px;font-size:16px;margin:3px 0 10px}button{background:#19385c;color:white;border:0;font-weight:bold;cursor:pointer}.secondary{background:#e8eef5;color:#172b44}.note{font-size:14px;color:#536171;background:#eef4fa;padding:12px;border-radius:9px}.danger{background:#fff1e8;color:#7d3100}.line{border-top:1px solid #e1e5e9;padding:12px 0}.money{font-weight:bold}video{max-width:100%;width:100%;border-radius:10px}table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:8px;border-bottom:1px solid #ddd}a{color:#173b65}.hidden{display:none}
-</style></head><body><main>
-<header><h1>RenovAI</h1><div>Scanare cameră • materiale • deviz estimativ</div></header>
-<section><h2>1. Filmează sau încarcă o cameră</h2>
-<p>Pe telefon, poți alege să filmezi cu camera sau să selectezi un videoclip existent.</p>
-<input id="videoFile" type="file" accept="video/*" capture="environment">
-<video id="preview" controls class="hidden"></video>
-<div class="note danger"><b>Limită:</b> videoclipul nu măsoară singur dimensiunile exacte. Confirmă dimensiunile camerei și folosește o referință măsurată (de ex. o lungime cunoscută) înainte să te bazezi pe deviz.</div></section>
-<section><h2>2. Confirmă dimensiunile</h2>
-<div class="grid"><div><label>Lungime (m)</label><input id="length" type="number" step="0.01" min="0" placeholder="ex. 5"></div><div><label>Lățime (m)</label><input id="width" type="number" step="0.01" min="0" placeholder="ex. 4"></div><div><label>Înălțime (m)</label><input id="height" type="number" step="0.01" min="0" placeholder="ex. 2.6"></div><div><label>Uși (m² total)</label><input id="doors" type="number" step="0.01" min="0" value="2"></div><div><label>Ferestre (m² total)</label><input id="windows" type="number" step="0.01" min="0" value="2"></div><div><label>Rezervă materiale (%)</label><input id="waste" type="number" step="1" min="0" value="10"></div></div>
-<button onclick="calculate()">Calculează suprafețele</button><div id="areas"></div></section>
-<section><h2>3. Deviz materiale și manoperă</h2>
-<div class="grid"><div><label>Tip lucrare</label><select id="job"><option value="paint">Vopsit pereți</option><option value="floor">Parchet / pardoseală</option><option value="tile">Gresie / faianță</option><option value="wallpaper">Tapet</option></select></div><div><label>Preț material (€ / unitate)</label><input id="matprice" type="number" min="0" step="0.01" value="0"></div><div><label>Unitate (€/m²)</label><input id="labprice" type="number" min="0" step="0.01" value="0" placeholder="manoperă €/m²"></div><div><label>Acoperire / unitate</label><input id="coverage" type="number" min="0.01" step="0.01" value="10" placeholder="m² per unitate"></div></div>
-<button onclick="estimate()">Generează deviz</button><div id="quote"></div><button class="secondary" onclick="window.print()">Printează / salvează PDF</button></section>
-<section><h2>4. Verifică prețurile în magazine</h2><label>Material de căutat</label><input id="searchTerm" placeholder="ex. parchet laminat 8 mm"><div class="grid"><button onclick="storeSearch('hornbe')">HORNBACH BE</button><button onclick="storeSearch('brico')">Brico</button><button onclick="storeSearch('hubo')">Hubo</button><button onclick="storeSearch('gamma')">GAMMA</button></div>
-<div class="note">Linkurile deschid căutarea magazinului. Prețurile nu sunt aduse automat în RenovAI în această versiune.</div></section>
+body{font-family:Arial,sans-serif;background:#f3f5f7;margin:0;color:#1d2633}header{background:#172c45;color:white;padding:18px}main{max-width:900px;margin:auto;padding:16px}.card{background:white;padding:16px;border-radius:12px;margin:12px 0;box-shadow:0 2px 8px #0001}input,select,button{font-size:16px;padding:10px;margin:5px 0;box-sizing:border-box}input,select{width:100%;border:1px solid #ccd3da;border-radius:8px}button{border:0;border-radius:8px;background:#2463a6;color:white;padding:12px;cursor:pointer}.secondary{background:#5b6773}.product{border:1px solid #ddd;border-radius:10px;padding:10px;margin:8px 0}.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}.small{font-size:13px;color:#586675}.price{font-size:18px;font-weight:bold}.total{font-size:24px;font-weight:bold}.pill{display:inline-block;background:#fff3cd;padding:5px 8px;border-radius:6px;color:#785400;font-size:12px}
+</style></head><body><header><h1>RenovAI</h1><div>Catalog materiale • calculator deviz</div></header><main>
+<div class="card"><h2>Catalog materiale</h2><p class="small">Alege categoria și caută materialul. Catalogul demo are prețuri orientative. Modulul nu verifică încă automat prețurile live HORNBACH Belgia; pentru acestea este necesară o sursă/API autorizată.</p>
+<input id="search" placeholder="Caută: vopsea, parchet, adeziv..." oninput="render()">
+<select id="category" onchange="render()"><option value="">Toate categoriile</option><option>Vopsea</option><option>Parchet</option><option>Gresie</option><option>Adeziv</option><option>Gips-carton</option><option>Izolație</option><option>Ciment</option><option>Unelte</option></select>
+<div id="products"></div></div>
+<div class="card"><h2>Materiale alese</h2><div id="cart"></div><div class="total">Total materiale: <span id="sum">0</span> €</div><button class="secondary" onclick="clearCart()">Golește lista</button></div>
+<div class="card"><h2>Adaugă material manual</h2><div class="row"><input id="customname" placeholder="Nume material"><input id="customprice" type="number" step="0.01" placeholder="Preț €"></div><div class="row"><input id="customqty" type="number" step="0.1" value="1" placeholder="Cantitate"><button onclick="addCustom()">Adaugă</button></div></div>
+<div class="card"><h2>Deviz</h2><label>Manoperă (€)</label><input id="labor" type="number" value="0" oninput="renderCart()"><label>Alte costuri (€)</label><input id="other" type="number" value="0" oninput="renderCart()"><div class="total">Total deviz: <span id="grand">0</span> €</div><button onclick="window.print()">Tipărește / PDF</button></div>
+<div class="card"><h2>Caută produs la HORNBACH</h2><input id="hsearch" placeholder="Introdu produsul"><button onclick="horn()">Caută în HORNBACH Belgia</button><p class="small">Acest buton deschide o căutare; nu pretinde că prețul este live în RenovAI.</p></div>
 </main><script>
-const $=id=>document.getElementById(id);let wallArea=0,floorArea=0,validAreas=false;
-$('videoFile').addEventListener('change',()=>{const f=$('videoFile').files[0];if(!f)return;const v=$('preview');v.src=URL.createObjectURL(f);v.classList.remove('hidden');});
-function calculate(){let L=+$('length').value,W=+$('width').value,H=+$('height').value,D=+$('doors').value||0,F=+$('windows').value||0,wr=(+$('waste').value||0)/100;
-if(!(L>0&&W>0&&H>0)){alert('Introdu lungimea, lățimea și înălțimea.');validAreas=false;return}
-floorArea=L*W;wallArea=Math.max(0,2*(L+W)*H-D-F);let netwall=wallArea;
-$('areas').innerHTML=`<div class="line"><b>Podea:</b> ${floorArea.toFixed(2)} m² (${(floorArea*(1+wr)).toFixed(2)} m² cu rezervă)<br><b>Pereți:</b> ${netwall.toFixed(2)} m² (${(netwall*(1+wr)).toFixed(2)} m² cu rezervă)<br><b>Volum:</b> ${(L*W*H).toFixed(2)} m³</div>`;validAreas=true}
-function estimate(){if(!validAreas)calculate();if(!validAreas)return;let job=$('job').value,area=(job==='floor'||job==='tile')?floorArea:wallArea,wr=(+$('waste').value||0)/100,qty=area*(1+wr),coverage=Math.max(.01,+$('coverage').value||1),units=Math.ceil(qty/coverage),mp=+$('matprice').value||0,lp=+$('labprice').value||0,mat=units*mp,lab=area*lp,total=mat+lab;let names={paint:'Vopsit pereți',floor:'Pardoseală',tile:'Gresie/faianță',wallpaper:'Tapet'};
-$('quote').innerHTML=`<div class="line"><b>${names[job]}</b><table><tr><th>Suprafață</th><td>${area.toFixed(2)} m²</td></tr><tr><th>Cu rezervă</th><td>${qty.toFixed(2)} m²</td></tr><tr><th>Unități estimate</th><td>${units} (acoperire ${coverage} m²/unitate)</td></tr><tr><th>Materiale</th><td>${mat.toFixed(2)} €</td></tr><tr><th>Manoperă</th><td>${lab.toFixed(2)} €</td></tr><tr><th>TOTAL</th><td class="money">${total.toFixed(2)} €</td></tr></table><p class="note">Estimare orientativă. Verifică ambalajul, acoperirea și prețurile actuale; manopera poate varia în funcție de starea suprafeței și complexitatea lucrării.</p></div>`}
-function storeSearch(s){let q=encodeURIComponent($('searchTerm').value.trim());if(!q){alert('Scrie materialul de căutat.');return}let urls={hornbe:'https://www.hornbach.be/nl/search/?q='+q,brico:'https://www.brico.be/nl/search?query='+q,hubo:'https://www.hubo.be/nl/search?query='+q,gamma:'https://www.gamma.be/nl/search?text='+q};window.open(urls[s],'_blank')}
+const catalog=[
+{name:"Vopsea lavabilă interior 10 L",cat:"Vopsea",price:34.95,unit:"găleată"},
+{name:"Vopsea grund 5 L",cat:"Vopsea",price:19.95,unit:"găleată"},
+{name:"Parchet laminat",cat:"Parchet",price:19.95,unit:"m²"},
+{name:"Plintă MDF 2,4 m",cat:"Parchet",price:6.95,unit:"buc."},
+{name:"Gresie",cat:"Gresie",price:24.95,unit:"m²"},
+{name:"Adeziv gresie 25 kg",cat:"Adeziv",price:17.95,unit:"sac"},
+{name:"Adeziv parchet",cat:"Adeziv",price:29.95,unit:"sac"},
+{name:"Placă gips-carton 12,5 mm",cat:"Gips-carton",price:8.95,unit:"placă"},
+{name:"Izolație minerală 10 cm",cat:"Izolație",price:8.50,unit:"m²"},
+{name:"Ciment 25 kg",cat:"Ciment",price:6.45,unit:"sac"},
+{name:"Șpaclu",cat:"Unelte",price:8.95,unit:"buc."},
+{name:"Rolă vopsea",cat:"Unelte",price:5.95,unit:"buc."}
+];let cart=[];
+function render(){let q=document.getElementById('search').value.toLowerCase(),cat=document.getElementById('category').value;let list=catalog.filter(p=>(!cat||p.cat===cat)&&(!q||p.name.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q)));document.getElementById('products').innerHTML=list.map((p,i)=>`<div class="product"><b>${p.name}</b><div class="small">${p.cat} • ${p.unit}</div><div class="price">${p.price.toFixed(2)} € <span class="pill">Preț demo</span></div><div class="row"><input type="number" min="0.1" step="0.1" id="q${catalog.indexOf(p)}" value="1"><button onclick="add(${catalog.indexOf(p)})">Adaugă în deviz</button></div></div>`).join('')||'Nu am găsit materiale.'}
+function add(i){let p=catalog[i],qty=Number(document.getElementById('q'+i).value)||1;cart.push({name:p.name,price:p.price,qty,unit:p.unit});renderCart()}
+function addCustom(){let name=document.getElementById('customname').value,price=Number(document.getElementById('customprice').value),qty=Number(document.getElementById('customqty').value)||1;if(!name||!price){alert('Introdu numele și prețul');return}cart.push({name,price,qty,unit:'buc.'});renderCart()}
+function remove(i){cart.splice(i,1);renderCart()}
+function clearCart(){cart=[];renderCart()}
+function renderCart(){document.getElementById('cart').innerHTML=cart.map((p,i)=>`<div class="product"><div class="row"><div><b>${p.name}</b><div class="small">${p.qty} × ${p.price.toFixed(2)} €</div></div><div>${(p.qty*p.price).toFixed(2)} €</div><button class="secondary" onclick="remove(${i})">Șterge</button></div></div>`).join('')||'Nu ai ales materiale.';let s=cart.reduce((a,p)=>a+p.price*p.qty,0);document.getElementById('sum').textContent=s.toFixed(2);document.getElementById('grand').textContent=(s+(Number(document.getElementById('labor').value)||0)+(Number(document.getElementById('other').value)||0)).toFixed(2)}
+function horn(){let q=document.getElementById('hsearch').value.trim();if(q)window.open('https://www.hornbach.be/nl/search/?query='+encodeURIComponent(q),'_blank')}
+render();renderCart();
 </script></body></html>
