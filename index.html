@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#164d35"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>RenovAI — Renovări inteligente</title>
+<style>
+:root{--ink:#17221d;--muted:#6a776f;--green:#226847;--lime:#d8f0df;--paper:#f5f7f4;--card:#fff;--line:#e2e9e3;--gold:#f5c76e}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink)}
+header{background:linear-gradient(135deg,#164d35,#28724e);color:white;padding:26px 20px 32px}
+header .top{max-width:1050px;margin:auto;display:flex;justify-content:space-between;align-items:center}
+.brand{font-weight:900;font-size:25px;letter-spacing:-1px}.brand span{color:#c6f1d1}
+header p{color:#d6e8db;max-width:700px;margin:12px auto 0;line-height:1.5}
+main{max-width:1050px;margin:0 auto;padding:20px}.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:18px}
+.tabs button{border:1px solid var(--line);background:white;border-radius:30px;padding:10px 15px;white-space:nowrap;color:var(--ink);cursor:pointer}
+.tabs button.active{background:var(--green);color:white;border-color:var(--green)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 3px 16px #173a2010}
+h2{font-size:21px;margin:0 0 14px}h3{font-size:16px;margin:0 0 9px}.muted{color:var(--muted);font-size:13px;line-height:1.5}
+label{display:block;font-size:13px;font-weight:650;margin:10px 0 5px}
+input,select,textarea{width:100%;border:1px solid #d9e2da;border-radius:10px;padding:11px;background:#fff;font:inherit;color:inherit}
+button.primary{background:var(--green);color:white;border:0;border-radius:12px;padding:12px 16px;font-weight:750;cursor:pointer;margin-top:12px}
+button.secondary{background:white;border:1px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.result{background:#edf7ef;border-radius:14px;padding:15px;margin-top:14px}
+.big{font-size:27px;font-weight:850;color:var(--green)}.chip{display:inline-block;background:var(--lime);color:#23563a;border-radius:30px;padding:6px 10px;font-size:12px;font-weight:700}
+.item{padding:12px 0;border-bottom:1px solid var(--line)}.item:last-child{border:0}.check{display:flex;align-items:center;gap:9px}.check input{width:auto}
+footer{text-align:center;padding:30px;color:var(--muted);font-size:12px}
+.hidden{display:none}.total{font-size:23px;font-weight:800}
+@media(max-width:600px){main{padding:14px}header{padding:22px 16px}.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="top"><div class="brand">🏠 Renov<span>AI</span></div><span class="chip">PROTOTIP</span></div>
+<p>Planifică renovarea, calculează materialele și estimează bugetul — într-un singur loc.</p></header>
+<main>
+<div class="tabs" id="tabs">
+<button class="active" data-tab="home">🏡 Proiect</button><button data-tab="calc">📐 Calcul materiale</button><button data-tab="paint">🎨 Vopsea</button><button data-tab="tile">🧱 Gresie</button><button data-tab="budget">💶 Buget</button><button data-tab="quote">📄 Deviz</button><button data-tab="floorplan">🧰 Calculatoare</button>
+</div>
+<section id="home" class="panel">
+<div class="grid">
+<div class="card"><h2>Proiect nou</h2><label>Numele proiectului</label><input id="project" placeholder="Ex. Renovare baie"><label>Tip încăpere</label><select id="room"><option>Living</option><option>Dormitor</option><option>Bucătărie</option><option>Baie</option><option>Hol</option><option>Altă încăpere</option></select>
+<div class="row"><div><label>Lungime (m)</label><input id="l" type="number" min="0" value="5" step=".1"></div><div><label>Lățime (m)</label><input id="w" type="number" min="0" value="4" step=".1"></div></div>
+<div class="row"><div><label>Înălțime (m)</label><input id="h" type="number" min="0" value="2.5" step=".1"></div><div><label>Uși/ferestre (m²)</label><input id="openings" type="number" min="0" value="2" step=".1"></div></div>
+<button class="primary" onclick="saveProject()">Salvează proiectul</button><div id="saved" class="muted"></div></div>
+<div class="card"><h2>Rezumat cameră</h2><div class="item"><span class="muted">Podea</span><div class="big" id="floor">20 m²</div></div><div class="item"><span class="muted">Pereți (minus goluri)</span><div class="big" id="wall">43 m²</div></div><div class="item"><span class="muted">Perimetru</span><div class="big" id="perim">18 m</div></div><p class="muted">Dimensiunile se actualizează automat în calculator.</p></div>
+</div>
+<div class="card" style="margin-top:15px"><h2>Checklist de renovare</h2>
+<div id="tasks"></div><label>Adaugă o etapă</label><input id="tasknew" placeholder="Ex. Demontare mobilier"><button class="secondary" onclick="addTask()">+ Adaugă</button></div>
+</section>
+<section id="calc" class="panel hidden"><div class="card"><h2>Calculator suprafețe</h2><p class="muted">Calculează suprafețele din dimensiunile proiectului.</p><div class="result"><div>Suprafața podelei</div><div class="big" id="cFloor">20 m²</div><div style="margin-top:8px">Suprafața netă a pereților</div><div class="big" id="cWall">43 m²</div></div></div></section>
+<section id="paint" class="panel hidden"><div class="card"><h2>Calculator vopsea</h2><label>Suprafața de vopsit (m²)</label><input id="paintArea" type="number" value="43" min="0"><label>Acoperire produs (m²/litru per strat)</label><input id="coverage" type="number" value="10" min="0" step=".1"><label>Număr straturi</label><select id="coats"><option>1</option><option selected>2</option><option>3</option></select><button class="primary" onclick="calcPaint()">Calculează</button><div class="result" id="paintResult">Introdu parametrii și calculează.</div><p class="muted">Estimarea depinde de porozitate, textura peretelui și fișa produsului.</p></div></section>
+<section id="tile" class="panel hidden"><div class="card"><h2>Calculator gresie / parchet</h2><label>Suprafață (m²)</label><input id="tileArea" type="number" value="20" min="0"><label>Suprafață per cutie (m²)</label><input id="boxArea" type="number" value="1.5" min="0" step=".1"><label>Rezervă</label><select id="reserve"><option value="5">5%</option><option selected value="10">10%</option><option value="15">15%</option></select><button class="primary" onclick="calcTile()">Calculează cutii</button><div class="result" id="tileResult"></div><p class="muted">Rezerva se ajustează în funcție de modelul de montaj, tăieturi și geometria încăperii.</p></div></section>
+<section id="budget" class="panel hidden"><div class="card"><h2>Estimare buget</h2><div class="row"><div><label>Material / lucrare</label><input id="bname" placeholder="Ex. Parchet"></div><div><label>Cost (€)</label><input id="bcost" type="number" min="0" placeholder="0"></div></div><button class="primary" onclick="addBudget()">Adaugă cost</button><div id="budgetItems"></div><div class="result"><span>Total estimat</span><div class="big" id="budgetTotal">€0</div></div></div></section>
+<section id="floorplan" class="panel hidden"><div class="grid">
+<div class="card"><h2>Calculator adeziv gresie</h2><label>Suprafață (m²)</label><input id="adhArea" type="number" value="20" min="0"><label>Consum (kg/m²)</label><input id="adhRate" type="number" value="4" min="0" step=".1"><label>Greutate sac (kg)</label><input id="adhBag" type="number" value="25" min="1"><button class="primary" onclick="calcAdhesive()">Calculează saci</button><div class="result" id="adhResult"></div></div>
+<div class="card"><h2>Calculator plintă</h2><label>Lungime perimetru (m)</label><input id="skirtPer" type="number" value="18" min="0"><label>Uși / întreruperi (m)</label><input id="skirtCut" type="number" value="2" min="0"><label>Lungime plintă per bucată (m)</label><input id="skirtPiece" type="number" value="2.4" min="0"><button class="primary" onclick="calcSkirting()">Calculează bucăți</button><div class="result" id="skirtResult"></div></div>
+<div class="card"><h2>Calculator tapet</h2><label>Suprafață pereți (m²)</label><input id="wallpaperArea" type="number" value="43" min="0"><label>Acoperire rolă (m²)</label><input id="wallpaperRoll" type="number" value="5" min="0"><label>Rezervă (%)</label><select id="wallpaperReserve"><option>5</option><option selected>10</option><option>15</option></select><button class="primary" onclick="calcWallpaper()">Calculează role</button><div class="result" id="wallpaperResult"></div></div>
+<div class="card"><h2>Calculator volum</h2><label>Lungime (m)</label><input id="volL" type="number" value="5"><label>Lățime (m)</label><input id="volW" type="number" value="4"><label>Înălțime (m)</label><input id="volH" type="number" value="2.5"><button class="primary" onclick="calcVolume()">Calculează volum</button><div class="result" id="volumeResult"></div></div>
+</div></section>
+<section id="quote" class="panel hidden"><div class="card"><h2>Deviz simplu</h2><p class="muted">Include automat proiectul, dimensiunile și costurile introduse.</p><button class="primary" onclick="makeQuote()">Generează deviz</button><div id="quoteText" style="margin-top:15px"></div><button class="secondary" onclick="window.print()">🖨️ Printează / salvează PDF</button></div></section>
+</main><footer>RenovAI • Estimări orientative, verifică întotdeauna cantitățile și specificațiile producătorului.</footer>
+<script>
+const tasksList=["Măsurarea încăperii","Demontare / pregătire","Instalații","Repararea pereților","Pardoseală","Vopsire / finisaje","Curățenie finală"];
+let tasks=tasksList.map(x=>({text:x,done:false})),budget=[];
+function dims(){let l=+document.getElementById('l').value||0,w=+document.getElementById('w').value||0,h=+document.getElementById('h').value||0,o=+document.getElementById('openings').value||0;return {floor:l*w,wall:Math.max(0,2*(l+w)*h-o),perim:2*(l+w)}}
+function update(){let d=dims();['floor','cFloor'].forEach(id=>document.getElementById(id).textContent=d.floor.toFixed(2)+' m²');['wall','cWall'].forEach(id=>document.getElementById(id).textContent=d.wall.toFixed(2)+' m²');document.getElementById('perim').textContent=d.perim.toFixed(2)+' m';document.getElementById('paintArea').value=d.wall.toFixed(2);document.getElementById('tileArea').value=d.floor.toFixed(2)}
+['l','w','h','openings'].forEach(id=>document.getElementById(id).addEventListener('input',update));
+function saveProject(){let p=document.getElementById('project').value||'Proiect de renovare';document.getElementById('saved').textContent='✓ '+p+' — '+document.getElementById('room').value+'; '+dims().floor.toFixed(2)+' m² podea.';update()}
+function renderTasks(){let el=document.getElementById('tasks');el.innerHTML=tasks.map((t,i)=>`<div class="item check"><input type="checkbox" ${t.done?'checked':''} onchange="tasks[${i}].done=this.checked;renderTasks()"><span style="${t.done?'text-decoration:line-through;color:#778':''}">${t.text}</span></div>`).join('')}
+function addTask(){let t=document.getElementById('tasknew').value.trim();if(!t)return;tasks.push({text:t,done:false});document.getElementById('tasknew').value='';renderTasks()}
+function calcPaint(){let a=+document.getElementById('paintArea').value||0,c=+document.getElementById('coverage').value||0,n=+document.getElementById('coats').value;if(c<=0){document.getElementById('paintResult').textContent='Acoperirea trebuie să fie mai mare decât zero.';return}let litres=a*n/c*1.1;document.getElementById('paintResult').innerHTML=`<div>Necesar estimat (cu 10% rezervă)</div><div class="big">${litres.toFixed(2)} litri</div><div class="muted">${a.toFixed(2)} m² × ${n} straturi ÷ ${c} m²/litru</div>`}
+function calcTile(){let a=+document.getElementById('tileArea').value||0,b=+document.getElementById('boxArea').value||0,r=+document.getElementById('reserve').value;if(b<=0){document.getElementById('tileResult').textContent='Suprafața cutiei trebuie să fie mai mare decât zero.';return}let net=a*(1+r/100),boxes=Math.ceil(net/b);document.getElementById('tileResult').innerHTML=`<div>Suprafață cu rezervă: <b>${net.toFixed(2)} m²</b></div><div class="big">${boxes} cutii</div><div class="muted">Necesar: ${net.toFixed(2)} m² ÷ ${b} m²/cutie</div>`}
+function addBudget(){let name=document.getElementById('bname').value.trim(),cost=+document.getElementById('bcost').value;if(!name||cost<0||!document.getElementById('bcost').value)return;budget.push({name,cost});document.getElementById('bname').value='';document.getElementById('bcost').value='';renderBudget()}
+function renderBudget(){document.getElementById('budgetItems').innerHTML=budget.map((b,i)=>`<div class="item"><div style="display:flex;justify-content:space-between"><span>${b.name}</span><b>€${b.cost.toFixed(2)}</b><button onclick="budget.splice(${i},1);renderBudget()" class="secondary">×</button></div></div>`).join('');document.getElementById('budgetTotal').textContent='€'+budget.reduce((s,b)=>s+b.cost,0).toFixed(2)}
+function calcAdhesive(){let a=+adhArea.value||0,r=+adhRate.value||0,b=+adhBag.value||0;if(b<=0){adhResult.textContent="Sac invalid";return}let kg=a*r*1.1;adhResult.innerHTML=`Necesar estimat: <b>${kg.toFixed(1)} kg</b><div class="big">${Math.ceil(kg/b)} saci</div><small>Include 10% rezervă.</small>`}
+function calcSkirting(){let p=(+skirtPer.value||0)-(+skirtCut.value||0),piece=+skirtPiece.value||0;if(piece<=0){skirtResult.textContent="Lungime invalidă";return}skirtResult.innerHTML=`Lungime netă: <b>${Math.max(0,p).toFixed(2)} m</b><div class="big">${Math.ceil(Math.max(0,p)/piece)} bucăți</div>`}
+function calcWallpaper(){let a=+wallpaperArea.value||0,r=+wallpaperRoll.value||0,extra=+wallpaperReserve.value;if(r<=0){wallpaperResult.textContent="Acoperire rolă invalidă";return}let total=a*(1+extra/100);wallpaperResult.innerHTML=`Suprafață cu rezervă: <b>${total.toFixed(2)} m²</b><div class="big">${Math.ceil(total/r)} role</div>`}
+function calcVolume(){let v=(+volL.value||0)*(+volW.value||0)*(+volH.value||0);volumeResult.innerHTML=`Volumul încăperii<div class="big">${v.toFixed(2)} m³</div>`}
+function makeQuote(){let d=dims(),name=document.getElementById('project').value||'Renovare',room=document.getElementById('room').value,total=budget.reduce((s,b)=>s+b.cost,0);document.getElementById('quoteText').innerHTML=`<h3>${name}</h3><p>Încăpere: ${room}</p><p>Podea: ${d.floor.toFixed(2)} m² · Pereți net: ${d.wall.toFixed(2)} m²</p><hr>${budget.map(b=>`<p>${b.name}: €${b.cost.toFixed(2)}</p>`).join('')}<h3>Total estimativ: €${total.toFixed(2)}</h3><p class="muted">Deviz orientativ; nu este ofertă contractuală.</p>`}
+document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.panel').forEach(p=>p.classList.add('hidden'));document.getElementById(b.dataset.tab).classList.remove('hidden')}));
+renderTasks();update();
+</script><script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("service-worker.js").catch(()=>{}));}</script></body></html>
