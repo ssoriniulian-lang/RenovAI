@@ -1,0 +1,11 @@
+RenovAI v3 - GitHub Pages deployment package
+
+This package is prepared for the repository root.
+- index.html is the RenovAI v3 app and replaces the old root index.html.
+- manifest.json, service-worker.js and icon files are the PWA support files.
+
+Upload/replace these files in the ROOT of the existing RenovAI repository.
+Do not delete package.json, server.js, scan-deviz-base.html, or README files that are not included here.
+Keep a backup of the old index.html before replacing it.
+After committing, wait for GitHub Pages deployment and open:
+https://ssoriniulian-lang.github.io/RenovAI/

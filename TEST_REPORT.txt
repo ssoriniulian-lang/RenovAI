@@ -1,0 +1,12 @@
+RenovAI v3 verification report
+
+Passed:
+- JavaScript syntax check (Node.js)
+- Calculation / input-safety assertions (area calculations, reserve math, integer pack counts, invalid inputs)
+- Static UI feature checks: planning tab, task dates and hours, JSON import/export controls, geometry warning
+- All literal DOM ID references found in source correspond to existing HTML IDs
+- ZIP archive integrity check
+
+Not verified in a real browser session:
+- Interactive browser smoke test was attempted with Chromium headless but timed out in this environment.
+- PWA installation, browser storage persistence, print dialog and file import/export require testing on an actual device/browser after deployment.
