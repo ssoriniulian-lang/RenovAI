@@ -1,12 +1,19 @@
-RenovAI v3 verification report
+RenovAI V5 local verification — 27 Nov 2026
 
-Passed:
-- JavaScript syntax check (Node.js)
-- Calculation / input-safety assertions (area calculations, reserve math, integer pack counts, invalid inputs)
-- Static UI feature checks: planning tab, task dates and hours, JSON import/export controls, geometry warning
-- All literal DOM ID references found in source correspond to existing HTML IDs
-- ZIP archive integrity check
+PASS: Backend JavaScript syntax checked with node --check.
+PASS: Frontend inline script extracted and syntax checked with node --check.
+PASS: Market selector includes BE and NL.
+PASS: NL feed slots: Praxis, GAMMA NL, Karwei, HORNBACH NL, Toolstation NL.
+PASS: BE feed slots: Brico, Hubo, GAMMA BE, HORNBACH BE.
+PASS: Backend searches imported feeds only; feed URLs are operator-configured environment variables.
+PASS: Feed importer supports JSON and CSV, explicit EUR, HTTPS product URLs, and 25 MB feed cap.
+PASS: Backend limits request rate, restricts CORS to configured origins, and uses server-side optional bearer tokens.
+PASS: No prices are seeded or fabricated.
+PASS: Calibration ratio example: 90 cm reference across 900 px => 10 px/cm; target lines 1000 px and 500 px => 1.00 m x 0.50 m = 0.50 m².
 
-Not verified in a real browser session:
-- Interactive browser smoke test was attempted with Chromium headless but timed out in this environment.
-- PWA installation, browser storage persistence, print dialog and file import/export require testing on an actual device/browser after deployment.
+NOT TESTED:
+- Retailer/network feed access, rights, mapping, and import against real feeds.
+- Browser or Android touch interactions.
+- Deploying backend to a host.
+- Deploying V5 to GitHub Pages.
+- Automatic AI/video recognition (not implemented).

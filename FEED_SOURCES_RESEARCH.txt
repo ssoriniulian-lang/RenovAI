@@ -1,0 +1,11 @@
+Research snapshot: 27 November 2026
+
+Confirmed potential authorized data routes (access still requires account/approval and feed access):
+- Praxis NL publisher program: https://ui.awin.com/merchant-profile/12222
+- Awin product feeds help: https://help.awin.com/developers/docs/downloading-a-list-of-your-product-feeds
+- TradeTracker announcement for GAMMA & KARWEI affiliate programs: https://tradetracker.com/nl/gamma-karwei-starten-affiliate-programma-bij-tradetracker/
+
+Not confirmed in this research:
+- Direct official price API/feed permission for HORNBACH NL, Toolstation NL, Brico BE, Hubo BE, GAMMA BE, HORNBACH BE.
+
+Feed access is not the same as an official retailer API. Do not use scraping or feed downloads unless the retailer/network terms and publisher permissions allow it.

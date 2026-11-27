@@ -1,0 +1,8 @@
+GitHub Pages checklist (Android)
+1. Repository > Settings > Pages.
+2. Source should be Deploy from a branch; branch main; folder /(root).
+3. Root of repository must contain lowercase index.html.
+4. Check the latest Actions run and Settings > Pages published URL.
+5. Test https://ssoriniulian-lang.github.io/RenovAI/ and /RenovAI/index.html.
+6. If 404 persists, open in Chrome Incognito or clear github.io site data.
+7. This ZIP cannot publish automatically; commit the file to the repository.
